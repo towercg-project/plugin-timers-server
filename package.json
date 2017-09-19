@@ -1,6 +1,6 @@
 {
   "name": "@towercg-plugins/timers-server",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "dist",
   "license": "AGPL-3.0",
   "engines": {
@@ -24,6 +24,7 @@
     "redux": "^3.7.2"
   },
   "dependencies": {
+    "auto-bind": "^1.1.0",
     "juration": "^0.1.0",
     "lodash": "^4.17.4",
     "redux": "^3.7.2"

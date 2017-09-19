@@ -1,5 +1,6 @@
 import * as TowerCGServer from '@towercg/server';
 
+import autobind from 'auto-bind';
 import * as _ from 'lodash';
 import juration from 'juration';
 
@@ -55,7 +56,12 @@ const timerResetFunctions = {
 export class TimersPlugin extends TowerCGServer.ServerPlugin {
   static pluginName = "timers";
   static reducer = pluginReducer;
-  static defaultConfig = { tickRate: 8 };
+  static defaultConfig = { tickRate: 96 };
+
+  constructor(pluginConfig, server) {
+    super(pluginConfig, server);
+    autobind(this);
+  }
 
   async initialize() {
     const tickRate = this.pluginConfig.tickRate;
@@ -88,16 +94,17 @@ export class TimersPlugin extends TowerCGServer.ServerPlugin {
   }
 
   _registerCommands() {
-    this._registerCommand('createTimer', (payload) => this._createTimer(payload.name, payload.type, payload.duration));
-    this._registerCommand('deleteTimer', (payload) => this._deleteTimer(payload.name));
-    this._registerCommand('resetTimer', (payload) => this._resetTimer(payload.name, payload.pause));
-    this._registerCommand('pauseTimer', (payload) => this._pauseTimer(payload.name));
-    this._registerCommand('resumeTimer', (payload) => this._resumeTimer(payload.name));
-    this._registerCommand('toggleTimer', (payload) => this._toggleTimer(payload.name));
+    this.registerCommand('createTimer', (payload) => this._createTimer(payload.name, payload.type, payload.duration));
+    this.registerCommand('deleteTimer', (payload) => this._deleteTimer(payload.name));
+    this.registerCommand('resetTimer', (payload) => this._resetTimer(payload.name, payload.pause));
+    this.registerCommand('pauseTimer', (payload) => this._pauseTimer(payload.name));
+    this.registerCommand('resumeTimer', (payload) => this._resumeTimer(payload.name));
+    this.registerCommand('toggleTimer', (payload) => this._toggleTimer(payload.name));
   }
 
   _withTimer(timerName, cb) {
-    const timer = this.timers[timerName];
+    const timers = this.state;
+    const timer = timers[timerName];
 
     if (!timer) {
       throw new Error(`Timer '${timerName}' not found.`);

@@ -111,6 +111,18 @@ export class TimersPlugin extends TowerCGServer.ServerPlugin {
       throw new Error(`Timer '${timerName}' already exists.`);
     }
 
+    switch (typeof(duration)) {
+      case "string":
+        const parsed = juration.parse(duration) * 1000;
+        this.logger.debug(`Juration: '${duration}' parsed to ${parsed}ms.`);
+        duration = parsed;
+        break;
+      case "number":
+        break;
+      default:
+        throw new Error(`Invalid duration type: ${typeof(duration)}`);
+    }
+
     const timerFunction = timerFunctions[type];
     const timerResetFunction = timerResetFunctions[type];
     if (!timerFunction) {
@@ -123,7 +135,7 @@ export class TimersPlugin extends TowerCGServer.ServerPlugin {
       name: timerName,
       type,
       duration,
-      running: false
+      running: false,
       elapsed: false
     });
 

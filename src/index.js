@@ -1,6 +1,5 @@
 import * as TowerCGServer from '@towercg/server';
 
-import autobind from 'auto-bind';
 import * as _ from 'lodash';
 import juration from 'juration';
 
@@ -60,7 +59,14 @@ export class TimersPlugin extends TowerCGServer.ServerPlugin {
 
   constructor(pluginConfig, server) {
     super(pluginConfig, server);
-    autobind(this);
+
+    this.initialize = this.initialize.bind(this);
+    this._handleTimers = this._handleTimers.bind(this);
+    this._registerCommands = this._registerCommands.bind(this);
+    this._withTimer = this._withTimer.bind(this);
+    this._createTimer = this._createTimer.bind(this);
+    this._deleteTimer = this._deleteTimer.bind(this);
+    this._resetTimer = this._resetTimer.bind(this);
   }
 
   async initialize() {
